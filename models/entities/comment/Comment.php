@@ -7,6 +7,7 @@ namespace app\models\entities\comment;
 use yii\db\ActiveRecord;
 use yii\validators\NumberValidator;
 use yii\validators\RequiredValidator;
+use yii\validators\StringValidator;
 
 /**
  * @property int $id

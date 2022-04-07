@@ -1,4 +1,4 @@
-FROM php:7.1-apache
+FROM php:7.2-apache
 
 RUN apt-get update && apt-get install -y \
         cron \
@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
         libjpeg62-turbo-dev \
         libxslt-dev \
         libicu-dev \
-        libmcrypt-dev \
+#        libmcrypt-dev \
         libxml2-dev \
         libsodium-dev \
         zlib1g-dev \
@@ -33,18 +33,13 @@ RUN apt-get update && apt-get install -y \
         --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install \
         gd \
-        mcrypt \
+#        mcrypt \
         mbstring \
         mysqli \
         pdo \
         pdo_mysql \
         zip \
-    && pecl install \
-        mongodb \
-        xdebug \
-    && docker-php-ext-enable mongodb \
-        xdebug \
-        pdo_mysql
+    && docker-php-ext-enable pdo_mysql
 
 #Composer
 RUN curl -sS https://getcomposer.org/installer | php -- \

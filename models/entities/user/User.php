@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace app\models\entities\user;
 
 use yii\db\ActiveRecord;
+use yii\validators\NumberValidator;
+use yii\validators\RequiredValidator;
+use yii\validators\StringValidator;
 
 /**
  * @property int $id
@@ -23,7 +26,7 @@ class User extends ActiveRecord
         return 'users';
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
             [['id', 'login'], RequiredValidator::class],

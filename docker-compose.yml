@@ -45,7 +45,7 @@ services:
     working_dir: ${WEB_WORKING_DIR}
     command: composer update --ignore-platform-reqs
 
-networks:
-  default:
-    external:
-      name: user_bridge
+#networks:
+#  default:
+#    external:
+#      name: user_bridge
