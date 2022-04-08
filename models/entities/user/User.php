@@ -10,11 +10,15 @@ use yii\validators\RequiredValidator;
 use yii\validators\StringValidator;
 
 /**
- * @property int $id
- * @property string $login
  *
  * Class User
  * @package app\models\entities\user
+ * @property string $USER [char(32)]
+ * @property int $CURRENT_CONNECTIONS [bigint(20)]
+ * @property int $TOTAL_CONNECTIONS [bigint(20)]
+ * @property int $id [int(11)]
+ * @property string $login [varchar(255)]
+ * @property bool $deleted [tinyint(1)]
  */
 class User extends ActiveRecord
 {
