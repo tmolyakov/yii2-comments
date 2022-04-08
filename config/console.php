@@ -1,5 +1,7 @@
 <?php
 
+use yii\console\controllers\FixtureController;
+
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
@@ -28,6 +30,14 @@ $config = [
         'db' => $db,
     ],
     'params' => $params,
+    'controllerMap' => [
+        'fixture' => [
+            'class' => \yii\faker\FixtureController::class,
+            'providers' => [
+                'tests\unit\faker\providers\UserProvider',
+            ],
+        ]
+    ],
     /*
     'controllerMap' => [
         'fixture' => [ // Fixture generation command line.
