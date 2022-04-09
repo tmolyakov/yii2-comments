@@ -11,7 +11,6 @@ RUN apt-get update && apt-get install -y \
         libjpeg62-turbo-dev \
         libxslt-dev \
         libicu-dev \
-#        libmcrypt-dev \
         libxml2-dev \
         libsodium-dev \
         zlib1g-dev \
@@ -33,20 +32,12 @@ RUN apt-get update && apt-get install -y \
         --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install \
         gd \
-#        mcrypt \
         mbstring \
         mysqli \
         pdo \
         pdo_mysql \
         zip \
     && docker-php-ext-enable pdo_mysql
-
-#Composer
-RUN curl -sS https://getcomposer.org/installer | php -- \
-        --filename=composer \
-        --install-dir=/usr/local/bin && \
-        echo "alias composer='composer'" >> /root/.bashrc && \
-        composer
 
 #Php.ini
 ADD php.ini /usr/local/etc/php
