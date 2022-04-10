@@ -7,7 +7,6 @@ namespace app\controllers;
 use app\models\entities\comment\Comment;
 use app\models\entities\comment\form\CommentForm;
 use app\services\CommentService;
-use yii\db\Exception;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 
