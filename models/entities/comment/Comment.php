@@ -40,7 +40,7 @@ class Comment extends ActiveRecord
     {
         return [
             [
-                ['id', 'post_id', 'author_id', 'created_at'],
+                ['post_id', 'author_id'],
                 RequiredValidator::class
             ],
             [
@@ -48,20 +48,6 @@ class Comment extends ActiveRecord
                 NumberValidator::class
             ],
             ['text', StringValidator::class, 'min' => 2, 'max' => 65535],
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function behaviors(): array
-    {
-        return [
-            [
-                'class' => TimestampBehavior::class,
-                'createdAtAttribute' => 'created_at',
-                'updatedAtAttribute' => 'updated_at',
-            ]
         ];
     }
 

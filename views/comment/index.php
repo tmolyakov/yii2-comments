@@ -1,6 +1,14 @@
 <?php
 
-/** @var yii\web\View $this */
+use app\models\entities\comment\form\CommentForm;
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
+
+/**
+ * @var yii\web\View $this
+ * @var CommentForm $comment
+ * @var array $errors
+ */
 
 $this->title = 'Comments';
 ?>
@@ -10,15 +18,35 @@ $this->title = 'Comments';
 <!------ Include the above in your HEAD tag ---------->
 
 <div class="container">
+    <h1>My best post ever</h1>
+    <h4>Comments</h4>
     <div class="post-comments">
+<!--        --><?php
+//        if ($errors) {
+//            foreach ($errors['modelErrors'] as $field => $fieldErrors) {
+//                foreach ($fieldErrors as $error) {
+//                    echo sprintf('%s - %s%s', $field, $error, PHP_EOL);
+//                }
+//            }
+//        }
+//        ?>
 
-        <form>
-            <div class="form-group">
-                <label for="comment">Your Comment</label>
-                <textarea name="comment" class="form-control" rows="3"></textarea>
-            </div>
-            <button type="submit" class="btn btn-default">Send</button>
-        </form>
+        <?php $form = ActiveForm::begin([
+            'id' => 'comment-form',
+            'action' => 'save',
+            'enableAjaxValidation' => true,
+        ]); ?>
+        <?= $form->field($comment, 'text')->textInput([
+            'required' => 'required',
+            'placeholder' => 'Text',
+        ]) ?>
+        <?= $form->field($comment, 'postId')->label(false)->hiddenInput() ?>
+        <?= $form->field($comment, 'authorId')->label(false)->hiddenInput() ?>
+        <?= $form->field($comment, 'parentId')->label(false)->hiddenInput() ?>
+        <div class="form-group">
+            <?= Html::submitButton('Send', ['class' => 'btn btn-primary']) ?>
+        </div>
+        <?php $form->end(); ?>
 
         <div class="comments-nav">
             <ul class="nav nav-pills">
