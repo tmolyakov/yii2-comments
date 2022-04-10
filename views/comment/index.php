@@ -1,7 +1,7 @@
 <?php
 
 use app\models\entities\comment\Comment;
-use app\models\entities\comment\form\CommentForm;
+use app\models\form\CommentForm;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -63,7 +63,8 @@ $this->title = 'Comments';
         <div class="row">
             <?php /** @var Comment $comment */ ?>
             <?php foreach ($comments as $comment): ?>
-                <div class="media">
+                <?php $commentData = json_encode(['id' => $comment->id, 'text' => $comment->text]); ?>
+                <div class="media" id="comment_<?= $comment->id ?>">
                     <!-- first comment -->
 
                     <div class="media-heading">
@@ -94,9 +95,8 @@ $this->title = 'Comments';
                         <div class="media-body">
                             <p><?= $comment->text ?></p>
                             <div class="comment-meta">
-                                <span><a href="#">delete</a></span>
-                                <span><a href="#">report</a></span>
-                                <span><a href="#">hide</a></span>
+                                <span><a onclick="deleteComment(<?= $comment->id ?>)">delete</a></span>
+                                <span><a onclick="updateComment('<?= $comment->id ?>', '<?= $comment->text ?>')">update</a></span>
                                 <span>
                         <a class="" role="button" data-toggle="collapse" href="#replyCommentT" aria-expanded="false" aria-controls="collapseExample">reply</a>
                       </span>
@@ -444,5 +444,47 @@ $this->title = 'Comments';
         currentIcon.toggleClass('glyphicon-plus glyphicon-minus');
         $parent.find('.glyphicon').not(currentIcon).removeClass('glyphicon-minus').addClass('glyphicon-plus');
 
+    });
+
+    function deleteComment(id) {
+        $.ajax({
+            url: '<?= Yii::$app->request->baseUrl . "/comment/delete" ?>',
+            type: 'post',
+            data: {
+                commentId: id
+            },
+            success: function (response) {
+                $('#comment_' + id).remove();
+            },
+            error: function (err) {
+                alert('An error occurred while deleting');
+            }
+        });
+    }
+
+    function updateComment(id, text) {
+        text += 'test abra cadabra';
+        $.ajax({
+            url: '<?= Yii::$app->request->baseUrl . "/comment/update" ?>',
+            type: 'post',
+            data: {
+                CommentForm: {
+                    text: text,
+                    commentId: id,
+                    authorId: 1,
+                    postId: 1,
+                }
+            },
+            success: function (response) {
+                console.log(response);
+                $('#comment_' + id).remove();
+            },
+            error: function (err) {
+                alert('An error occurred while deleting');
+            }
+        });
+    }
+
+    $(document).ready(function() {
     });
 </script>

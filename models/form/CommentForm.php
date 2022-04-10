@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace app\models\entities\comment\form;
+namespace app\models\form;
 
 use yii\base\Model;
+use yii\validators\NumberValidator;
 use yii\validators\RequiredValidator;
 use yii\validators\StringValidator;
 
@@ -22,14 +23,17 @@ class CommentForm extends Model
     public $authorId;
     /** @var int */
     public $parentId = 0;
+    /** @var int */
+    public $commentId;
 
     /**
-     * @return array|array[]
+     * @return array
      */
     public function rules(): array
     {
         return [
             [['text', 'postId', 'authorId'], RequiredValidator::class],
+            [['commentId', 'postId', 'authorId'], NumberValidator::class],
             ['text', StringValidator::class, 'min' => 2, 'max' => 65535],
         ];
     }
