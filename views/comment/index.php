@@ -6,8 +6,9 @@ use yii\widgets\ActiveForm;
 
 /**
  * @var yii\web\View $this
- * @var CommentForm $comment
+ * @var CommentForm $form
  * @var array $errors
+ * @var array $comments
  */
 
 $this->title = 'Comments';
@@ -31,33 +32,29 @@ $this->title = 'Comments';
 //        }
 //        ?>
 
-        <?php $form = ActiveForm::begin([
+        <?php $actForm = ActiveForm::begin([
             'id' => 'comment-form',
             'action' => 'save',
             'enableAjaxValidation' => true,
         ]); ?>
-        <?= $form->field($comment, 'text')->textInput([
+        <?= $actForm->field($form, 'text')->textInput([
             'required' => 'required',
             'placeholder' => 'Text',
         ]) ?>
-        <?= $form->field($comment, 'postId')->label(false)->hiddenInput() ?>
-        <?= $form->field($comment, 'authorId')->label(false)->hiddenInput() ?>
-        <?= $form->field($comment, 'parentId')->label(false)->hiddenInput() ?>
+        <?= $actForm->field($form, 'postId')->label(false)->hiddenInput() ?>
+        <?= $actForm->field($form, 'authorId')->label(false)->hiddenInput() ?>
+        <?= $actForm->field($form, 'parentId')->label(false)->hiddenInput() ?>
         <div class="form-group">
             <?= Html::submitButton('Send', ['class' => 'btn btn-primary']) ?>
         </div>
-        <?php $form->end(); ?>
+        <?php $actForm->end(); ?>
 
         <div class="comments-nav">
             <ul class="nav nav-pills">
                 <li role="presentation" class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                        there are 2593 comments <span class="caret"></span>
+                        <?= count($comments) ?> comments
                     </a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Best</a></li>
-                        <li><a href="#">Hot</a></li>
-                    </ul>
                 </li>
             </ul>
         </div>

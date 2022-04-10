@@ -12,5 +12,19 @@ use yii\db\ActiveQuery;
  */
 class CommentQuery extends ActiveQuery
 {
+    /**
+     * @return ActiveQuery
+     */
+    public function getAllWithAuthor(): ActiveQuery
+    {
+        return $this->active()->with('author');
+    }
 
+    /**
+     * @return ActiveQuery
+     */
+    public function active(): ActiveQuery
+    {
+        return $this->andWhere(['deleted' => 0]);
+    }
 }

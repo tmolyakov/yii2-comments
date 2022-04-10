@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace app\models\entities\comment;
 
+use app\models\entities\user\User;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\validators\NumberValidator;
 use yii\validators\RequiredValidator;
@@ -22,6 +24,8 @@ use yii\validators\StringValidator;
  * @property int $updated_at [timestamp]
  * @property string $text
  * @property bool $deleted [tinyint(1)]
+ *
+ * @property User $author
  */
 class Comment extends ActiveRecord
 {
@@ -49,6 +53,14 @@ class Comment extends ActiveRecord
             ],
             ['text', StringValidator::class, 'min' => 2, 'max' => 65535],
         ];
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getAuthor()
+    {
+        return $this->hasOne(User::class, ['id' => 'author_id']);
     }
 
     /**

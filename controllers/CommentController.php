@@ -6,6 +6,7 @@ namespace app\controllers;
 
 use app\models\entities\comment\Comment;
 use app\models\entities\comment\form\CommentForm;
+use app\services\CommentService;
 use yii\db\Exception;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
@@ -21,12 +22,13 @@ class CommentController extends Controller
      */
     public function actionIndex(): string
     {
-        $comment = new CommentForm();
-        $comment->authorId = 1;
-        $comment->postId = 1;
+        $commentForm = new CommentForm();
+        $commentForm->authorId = 1;
+        $commentForm->postId = 1;
 
         return $this->render('index', [
-            'comment' => $comment,
+            'form' => $commentForm,
+            'comments' => Comment::find()->getAllWithAuthor()->all(),
         ]);
     }
 
@@ -41,20 +43,14 @@ class CommentController extends Controller
         try {
             if (!$model->load(\Yii::$app->request->post()) || !$model->validate()) {
                 $errors = $model->getErrors();
-                throw new BadRequestHttpException('bad request');
+                throw new BadRequestHttpException('Bad request');
             }
 
-            $comment = new Comment();
-            $comment->setAttributes([
-                'author_id' => $model->authorId,
-                'post_id' => $model->postId,
-                'parent_id' => $model->parentId,
-                'text' => $model->text,
-            ]);
+            $comment = CommentService::save($model);
 
-            if (!$comment->save()) {
-                $errors = $comment->getErrors();
-                throw new BadRequestHttpException('validation error');
+            if ($comment->errors) {
+                $errors = $comment->errors;
+                throw new BadRequestHttpException('Comment save error');
             }
         } catch (\Exception $exception) {
             $errors['modelErrors'] = $errors;
@@ -62,8 +58,9 @@ class CommentController extends Controller
         }
 
         return $this->render('index', [
-            'comment' => $model,
+            'form' => $model,
             'errors' => $errors,
+            'comments' => Comment::find()->getAllWithAuthor()->all(),
         ]);
     }
 }
