@@ -20,6 +20,7 @@ use yii\web\Response;
 class CommentController extends Controller
 {
     /**
+     * Render comment page
      * @return string
      */
     public function actionIndex(): string
@@ -35,6 +36,7 @@ class CommentController extends Controller
     }
 
     /**
+     * Save comment
      * @return string
      */
     public function actionSave(): string
@@ -67,6 +69,7 @@ class CommentController extends Controller
     }
 
     /**
+     * Delete comment
      * @return bool
      * @throws StaleObjectException
      */
@@ -79,6 +82,7 @@ class CommentController extends Controller
     }
 
     /**
+     * Update comment
      * @return ModelJsonResponse
      */
     public function actionUpdate(): ModelJsonResponse
@@ -87,7 +91,6 @@ class CommentController extends Controller
 
         $model = new CommentForm();
         $response = new ModelJsonResponse();
-        $comment = null;
 
         try {
             $request = \Yii::$app->request->post();
@@ -96,6 +99,34 @@ class CommentController extends Controller
                 throw new BadRequestHttpException('Bad request');
             }
             $comment = CommentService::update($model);
+            $response->model = $comment;
+        } catch (\Exception $e) {
+            $response->modelErrors = $model->getErrors();
+            $response->error = $e->getMessage();
+        }
+
+        return $response;
+    }
+
+    /**
+     * Reply comment
+     * @return ModelJsonResponse
+     */
+    public function actionReply(): ModelJsonResponse
+    {
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $model = new CommentForm();
+        $response = new ModelJsonResponse();
+
+        try {
+            $request = \Yii::$app->request->post();
+
+            if (!$model->load($request) || !$model->validate()) {
+                throw new BadRequestHttpException('Bad request');
+            }
+
+            $comment = CommentService::save($model);
             $response->model = $comment;
         } catch (\Exception $e) {
             $response->modelErrors = $model->getErrors();

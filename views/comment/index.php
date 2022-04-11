@@ -101,12 +101,13 @@ $this->title = 'Comments';
                         <a class="" role="button" data-toggle="collapse" href="#replyCommentT" aria-expanded="false" aria-controls="collapseExample">reply</a>
                       </span>
                                 <div class="collapse" id="replyCommentT">
-                                    <form>
+                                    <form class="replyComment">
                                         <div class="form-group">
                                             <label for="comment">Your Comment</label>
-                                            <textarea name="comment" class="form-control" rows="3"></textarea>
+                                            <textarea name="comment" class="form-control replyText" rows="3"></textarea>
+                                            <input type="hidden" class="replyCommentId" value="<?= $comment->id ?>">
                                         </div>
-                                        <button type="submit" class="btn btn-default">Send</button>
+                                        <button type="submit" class="btn btn-default">Reply</button>
                                     </form>
                                 </div>
                             </div>
@@ -463,7 +464,6 @@ $this->title = 'Comments';
     }
 
     function updateComment(id, text) {
-        text += 'test abra cadabra';
         $.ajax({
             url: '<?= Yii::$app->request->baseUrl . "/comment/update" ?>',
             type: 'post',
@@ -476,7 +476,6 @@ $this->title = 'Comments';
                 }
             },
             success: function (response) {
-                console.log(response);
                 $('#comment_' + id).remove();
             },
             error: function (err) {
@@ -486,5 +485,27 @@ $this->title = 'Comments';
     }
 
     $(document).ready(function() {
+        $('.replyComment').submit(function (e) {
+            e.preventDefault()
+
+            $.ajax({
+                url: '<?= Yii::$app->request->baseUrl . "/comment/reply" ?>',
+                type: 'post',
+                data: {
+                    CommentForm: {
+                        text: $(this).find('textarea.replyText').val(),
+                        parentId: $(this).find('input.replyCommentId').val(),
+                        authorId: 1,
+                        postId: 1,
+                    }
+                },
+                success: function (response) {
+                    console.log(response);
+                },
+                error: function (err) {
+                    alert('An error occurred while deleting');
+                }
+            });
+        })
     });
 </script>
