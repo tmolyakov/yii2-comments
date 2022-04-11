@@ -98,9 +98,9 @@ $this->title = 'Comments';
                                 <span><a onclick="deleteComment(<?= $comment->id ?>)">delete</a></span>
                                 <span><a onclick="updateComment('<?= $comment->id ?>', '<?= $comment->text ?>')">update</a></span>
                                 <span>
-                        <a class="" role="button" data-toggle="collapse" href="#replyCommentT" aria-expanded="false" aria-controls="collapseExample">reply</a>
+                        <a class="" role="button" data-toggle="collapse" href="#replyCommentT_<?= $comment->id ?>" aria-expanded="false" aria-controls="collapseExample">reply</a>
                       </span>
-                                <div class="collapse" id="replyCommentT">
+                                <div class="collapse" id="replyCommentT_<?= $comment->id ?>">
                                     <form class="replyComment">
                                         <div class="form-group">
                                             <label for="comment">Your Comment</label>
