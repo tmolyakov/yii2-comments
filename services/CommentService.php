@@ -41,6 +41,8 @@ class CommentService
      */
     public static function delete(int $commentId): bool
     {
+        Comment::deleteAll(['parent_id' => $commentId]);
+
         return (bool)Comment::find()->byId($commentId)->one()->delete();
     }
 

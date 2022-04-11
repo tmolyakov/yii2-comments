@@ -22,6 +22,15 @@ class CommentQuery extends ActiveQuery
     }
 
     /**
+     * @param int $id
+     * @return CommentQuery
+     */
+    public function byParentId(int $id): CommentQuery
+    {
+        return $this->andWhere(['parent_id' => $id]);
+    }
+
+    /**
      * @return CommentQuery
      */
     public function getAllWithAuthor(): CommentQuery

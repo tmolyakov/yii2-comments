@@ -33,7 +33,7 @@ class CommentForm extends Model
     {
         return [
             [['text', 'postId', 'authorId'], RequiredValidator::class],
-            [['commentId', 'postId', 'authorId'], NumberValidator::class],
+            [['commentId', 'postId', 'authorId', 'parentId'], NumberValidator::class],
             ['text', StringValidator::class, 'min' => 2, 'max' => 65535],
         ];
     }
