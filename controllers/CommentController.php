@@ -29,27 +29,13 @@ class CommentController extends Controller
         $commentForm->authorId = 1;
         $commentForm->postId = 1;
 
-        $topIds = Comment::find()->getTop()->select('id')->column();
-        $relations = CommentService::getRelations($topIds);
-        $allIds = array_keys($relations);
-
-        foreach ($relations as $items) {
-            $allIds = array_merge($allIds, array_keys($items));
-        }
-
-        /** @var Comment[] $comments */
-        $comments = Comment::find()->byIds(array_unique($allIds))->all();
-        $commentsData = [];
-
-        foreach ($comments as $comment) {
-            $commentsData[$comment->id] = $comment;
-        }
+        $viewData = CommentService::getViewData();
 
         return $this->render('index', [
             'form' => $commentForm,
-            'relations' => $relations,
-            'commentsData' => $commentsData,
-            'topIds' => $topIds,
+            'relations' => $viewData->relations,
+            'commentsData' => $viewData->commentsData,
+            'topIds' => $viewData->topIds,
         ]);
     }
 
@@ -79,10 +65,13 @@ class CommentController extends Controller
             $errors['message'] = $exception->getMessage();
         }
 
+        $viewData = CommentService::getViewData();
+
         return $this->render('index', [
             'form' => $model,
-            'errors' => $errors,
-            'comments' => Comment::find()->getAllWithAuthor()->all(),
+            'relations' => $viewData->relations,
+            'commentsData' => $viewData->commentsData,
+            'topIds' => $viewData->topIds,
         ]);
     }
 
@@ -91,7 +80,7 @@ class CommentController extends Controller
      * @return bool
      * @throws StaleObjectException
      */
-    public function actionDelete()
+    public function actionDelete(): bool
     {
         \Yii::$app->response->format = Response::FORMAT_JSON;
         $commentId = \Yii::$app->request->post('commentId');

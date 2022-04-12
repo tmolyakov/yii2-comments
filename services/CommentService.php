@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace app\services;
 
 use app\models\entities\comment\Comment;
+use app\models\entities\comment\CommentViewDto;
 use app\models\form\CommentForm;
 use Exception;
 use yii\db\StaleObjectException;
@@ -95,5 +96,29 @@ class CommentService
         }
 
         return $commentsRelations;
+    }
+
+    /**
+     * @return CommentViewDto
+     */
+    public static function getViewData(): CommentViewDto
+    {
+        $topIds = Comment::find()->getTop()->select('id')->column();
+        $relations = self::getRelations($topIds);
+        $allIds = array_keys($relations);
+
+        foreach ($relations as $items) {
+            $allIds = array_merge($allIds, array_keys($items));
+        }
+
+        /** @var Comment[] $comments */
+        $comments = Comment::find()->byIds(array_unique($allIds))->all();
+        $commentsData = [];
+
+        foreach ($comments as $comment) {
+            $commentsData[$comment->id] = $comment;
+        }
+
+        return new CommentViewDto($relations, $commentsData, $topIds);
     }
 }
