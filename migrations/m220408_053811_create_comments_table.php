@@ -26,15 +26,15 @@ class m220408_053811_create_comments_table extends Migration
             'deleted' => $this->boolean()->notNull()->defaultValue(0),
         ]);
 
-        $this->addForeignKey(
-            'fk_comments_author_id',
-            $this->tableName,
-            'author_id',
-            'users',
-            'id',
-            'CASCADE',
-            'CASCADE'
-        );
+//        $this->addForeignKey(
+//            'fk_comments_author_id',
+//            $this->tableName,
+//            'author_id',
+//            'users',
+//            'id',
+//            'CASCADE',
+//            'CASCADE'
+//        );
 
         $this->createIndex(
             'idx_comments_post_id',
