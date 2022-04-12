@@ -15,6 +15,8 @@ use yii\db\StaleObjectException;
  */
 class CommentService
 {
+    const COMMENT_DEPTH = 3;
+
     /**
      * @param CommentForm $form
      * @return Comment
@@ -59,5 +61,39 @@ class CommentService
         $comment->update(true, ['text']);
 
         return $comment;
+    }
+
+    /**
+     * @param array $topIds
+     * @return array
+     */
+    public static function getRelations(array $topIds): array
+    {
+        $commentsRelations = [];
+
+        foreach ($topIds as $id) {
+            $commentsRelations[$id] = [];
+        }
+
+        for ($i = 1; $i <= self::COMMENT_DEPTH; $i++) {
+            $children = Comment::find()
+                ->getChildren($topIds)
+                ->select(['id', 'parent_id', 'text'])
+                ->asArray()
+                ->all();
+
+            if (empty($children)) {
+                break;
+            }
+
+            $topIds = [];
+
+            foreach ($children as $child) {
+                $commentsRelations[$child['parent_id']][$child['id']] = $child;
+                $topIds[] = $child['id'];
+            }
+        }
+
+        return $commentsRelations;
     }
 }

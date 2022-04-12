@@ -9,7 +9,9 @@ use yii\widgets\ActiveForm;
  * @var yii\web\View $this
  * @var CommentForm $form
  * @var array $errors
- * @var array $comments
+ * @var array $relations
+ * @var array $commentsData
+ * @var array $topIds
  */
 
 $this->title = 'Comments';
@@ -54,7 +56,7 @@ $this->title = 'Comments';
             <ul class="nav nav-pills">
                 <li role="presentation" class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                        <?= count($comments) ?> comments
+                        <?= count($topIds) ?> comments
                     </a>
                 </li>
             </ul>
@@ -62,9 +64,14 @@ $this->title = 'Comments';
 
         <div class="row">
             <?php /** @var Comment $comment */ ?>
-            <?php foreach ($comments as $comment): ?>
-                <?php $commentData = json_encode(['id' => $comment->id, 'text' => $comment->text]); ?>
-                <div class="media" id="comment_<?= $comment->id ?>">
+            <?php foreach ($topIds as $commentId): ?>
+                <?php
+                    $comment = $commentsData[$commentId] ?? null;
+                    if (!$comment) {
+                        continue;
+                    }
+                ?>
+                <div class="media" id="comment_<?= $commentId ?>">
                     <!-- first comment -->
 
                     <div class="media-heading">
@@ -78,7 +85,6 @@ $this->title = 'Comments';
                         <div class="media-left">
                             <div class="vote-wrap">
                                 <div class="save-post">
-<!--                                    <a href="#"><span class="glyphicon glyphicon-star" aria-label="Save"></span></a>-->
                                 </div>
                                 <div class="vote up">
                                     <i class="glyphicon glyphicon-menu-up"></i>
@@ -95,17 +101,17 @@ $this->title = 'Comments';
                         <div class="media-body">
                             <p><?= $comment->text ?></p>
                             <div class="comment-meta">
-                                <span><a onclick="deleteComment(<?= $comment->id ?>)">delete</a></span>
-                                <span><a onclick="updateComment('<?= $comment->id ?>', '<?= $comment->text ?>')">update</a></span>
+                                <span><a onclick="deleteComment(<?= $commentId ?>)">delete</a></span>
+                                <span><a onclick="updateComment('<?= $commentId ?>', '<?= $comment->text ?>')">update</a></span>
                                 <span>
-                        <a class="" role="button" data-toggle="collapse" href="#replyCommentT_<?= $comment->id ?>" aria-expanded="false" aria-controls="collapseExample">reply</a>
+                        <a class="" role="button" data-toggle="collapse" href="#replyCommentT_<?= $commentId ?>" aria-expanded="false" aria-controls="collapseExample">reply</a>
                       </span>
-                                <div class="collapse" id="replyCommentT_<?= $comment->id ?>">
+                                <div class="collapse" id="replyCommentT_<?= $commentId ?>">
                                     <form class="replyComment">
                                         <div class="form-group">
                                             <label for="comment">Your Comment</label>
                                             <textarea name="comment" class="form-control replyText" rows="3"></textarea>
-                                            <input type="hidden" class="replyCommentId" value="<?= $comment->id ?>">
+                                            <input type="hidden" class="replyCommentId" value="<?= $commentId ?>">
                                         </div>
                                         <button type="submit" class="btn btn-default">Reply</button>
                                     </form>

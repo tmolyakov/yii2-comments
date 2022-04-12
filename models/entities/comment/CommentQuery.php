@@ -22,6 +22,15 @@ class CommentQuery extends ActiveQuery
     }
 
     /**
+     * @param int[] $ids
+     * @return CommentQuery
+     */
+    public function byIds(array $ids): CommentQuery
+    {
+        return $this->andWhere(['id' => $ids]);
+    }
+
+    /**
      * @param int $id
      * @return CommentQuery
      */
@@ -35,7 +44,24 @@ class CommentQuery extends ActiveQuery
      */
     public function getAllWithAuthor(): CommentQuery
     {
-        return $this->active()->with('author');
+        return $this->with('author');
+    }
+
+    /**
+     * @return CommentQuery
+     */
+    public function getTop(): CommentQuery
+    {
+        return $this->andWhere(['parent_id' => 0]);
+    }
+
+    /**
+     * @param int[] $ids
+     * @return CommentQuery
+     */
+    public function getChildren(array $ids): CommentQuery
+    {
+        return $this->andWhere(['parent_id' => $ids]);
     }
 
     /**

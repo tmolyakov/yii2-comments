@@ -29,9 +29,27 @@ class CommentController extends Controller
         $commentForm->authorId = 1;
         $commentForm->postId = 1;
 
+        $topIds = Comment::find()->getTop()->select('id')->column();
+        $relations = CommentService::getRelations($topIds);
+        $allIds = array_keys($relations);
+
+        foreach ($relations as $items) {
+            $allIds = array_merge($allIds, array_keys($items));
+        }
+
+        /** @var Comment[] $comments */
+        $comments = Comment::find()->byIds(array_unique($allIds))->all();
+        $commentsData = [];
+
+        foreach ($comments as $comment) {
+            $commentsData[$comment->id] = $comment;
+        }
+
         return $this->render('index', [
             'form' => $commentForm,
-            'comments' => Comment::find()->getAllWithAuthor()->all(),
+            'relations' => $relations,
+            'commentsData' => $commentsData,
+            'topIds' => $topIds,
         ]);
     }
 
